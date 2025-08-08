@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Stray Kids Game</title>
+        <!-- Favicon-->
+        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+        <!-- Custom Google font-->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@100;200;300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet" />
+        <!-- Bootstrap icons-->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="css/styles.css" rel="stylesheet" />
+    </head>
+    <body class="d-flex flex-column h-100 bg-light">
+        <main class="flex-shrink-0">
+            <!-- Navigation-->
+            <nav class="navbar navbar-expand-lg navbar-light bg-white py-3">
+                <div class="container px-5">
+                    <a class="navbar-brand" href="index.html"><span class="fw-bolder text-primary">Home</span></a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav ms-auto mb-2 mb-lg-0 small fw-bolder">
+                            <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                            <li class="nav-item"><a class="nav-link" href="resume.html">Resume</a></li>
+                            <li class="nav-item"><a class="nav-link" href="projects.html">Game</a></li>
+                            <li class="nav-item"><a class="nav-link" href="contact.html">Stray Kids</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <!-- Projects Section-->
+           <div class="header">
+        <h1>Stray Kids Guessing Game</h1>
+    </div>
+    <div class="app">
+    <h1>Guess the Stray Kids Member</h1>
+    <p class="sub">Type a member’s name. Use <strong>Hint</strong> if you’re stuck. Try to guess in the fewest attempts possible.</p>
+
+    <div class="row">
+      <!-- Left: Game -->
+      <section class="card">
+        <div class="status">
+          <span class="chip">Attempts: <span id="tries">0</span></span>
+          <span class="chip">Hints used: <span id="hints">0</span></span>
+          <span class="chip red">Streak: <span id="streak">0</span></span>
+        </div>
+
+        <div class="controls">
+          <input id="guess" type="text" placeholder="e.g., Bang Chan, Lee Know, Hyunjin..." autocomplete="off" />
+          <button id="submit">Guess</button>
+          <button id="hint" class="secondary">Hint</button>
+          <button id="reveal" class="secondary">Reveal</button>
+          <button id="reset" class="warn">New Round</button>
+        </div>
+
+        <div id="message" class="msg"></div>
+        <div id="hintBox" class="hint" style="display:none;"></div>
+      </section>
+
+      <!-- Right: Quick help / valid answers -->
+      <aside class="card">
+        <h3 style="margin-top:0">Valid Answers</h3>
+        <ul class="list tiny">
+          <li>Bang Chan (Chan, Christopher)</li>
+          <li>Lee Know (Minho)</li>
+          <li>Changbin</li>
+          <li>Hyunjin</li>
+          <li>Han (Han Jisung, Jisung)</li>
+          <li>Felix (Yongbok)</li>
+          <li>Seungmin</li>
+          <li>I.N (Jeongin)</li>
+        </ul>
+        <p class="footer-note">Tip: spelling counts, but common aliases work.</p>
+      </aside>
+    </div>
+  </div>
+
+<script>
+(function(){
+  // Member data with multiple accepted aliases and rotating hints
+  const MEMBERS = [
+    {
+      name: "Bang Chan",
+      aliases: ["bangchan","chan","christopher","christopher bang","cb97"],
+      hints: [
+        "Leader, producer, part of 3RACHA.",
+        "Raised in Australia; trainee for ~7 years.",
+        "Often runs weekly live streams for STAY."
+      ]
+    },
+    {
+      name: "Lee Know",
+      aliases: ["leeknow","lee know","minho","lee minho"],
+      hints: [
+        "Main dancer and choreographer.",
+        "Stage name sounds like 'Lee Know'.",
+        "Cat dad; sharp, precise performance style."
+      ]
+    },
+    {
+      name: "Changbin",
+      aliases: ["changbin","seo changbin","binnie"],
+      hints: [
+        "Rapper in 3RACHA; known for speed rap.",
+        "Often pairs with Han in writing/production.",
+        "Strong stage presence; gym enthusiast."
+      ]
+    },
+    {
+      name: "Hyunjin",
+      aliases: ["hyunjin","hwang hyunjin"],
+      hints: [
+        "Visual & main dancer; fluid lines.",
+        "Known for dramatic performance.",
+        "Painter; often shares artwork."
+      ]
+    },
+    {
+      name: "Han",
+      aliases: ["han","han jisung","jisung"],
+      hints: [
+        "Rapper/singer in 3RACHA; all‑rounder.",
+        "Distinct tone; powerhouse writer.",
+        "Often handles hooks and melodies."
+      ]
+    },
+    {
+      name: "Felix",
+      aliases: ["felix","lee yongbok","yongbok","bok"],
+      hints: [
+        "Deep voice; also from Australia.",
+        "Freckles; sunshine energy.",
+        "Known for iconic low lines in title tracks."
+      ]
+    },
+    {
+      name: "Seungmin",
+      aliases: ["seungmin","kim seungmin"],
+      hints: [
+        "Main vocal; stable live tone.",
+        "MC/host experience; clear diction.",
+        "Coffee lover; tidy and organized."
+      ]
+    },
+    {
+      name: "I.N",
+      aliases: ["i.n","in","jeongin","yang jeongin","yangjeongin"],
+      hints: [
+        "Maknae (youngest).",
+        "Vocals with bright timbre.",
+        "Confident growth era."
+      ]
+    }
+  ];
+
+  // State
+  let answerIndex = -1;
+  let tries = 0;
+  let hintsUsed = 0;
+  let streak = 0;
+  let revealed = false;
+
+  // Elements
+  const $guess = document.getElementById('guess');
+  const $submit = document.getElementById('submit');
+  const $hint = document.getElementById('hint');
+  const $reveal = document.getElementById('reveal');
+  const $reset = document.getElementById('reset');
+  const $msg = document.getElementById('message');
+  const $hintBox = document.getElementById('hintBox');
+  const $tries = document.getElementById('tries');
+  const $hints = document.getElementById('hints');
+  const $streak = document.getElementById('streak');
+
+  function normalize(s){
+    return (s||"").toString().toLowerCase().replace(/[\s\.\-_'’]/g,'');
+  }
+
+  function pickAnswer(){
+    answerIndex = Math.floor(Math.random()*MEMBERS.length);
+    tries = 0; hintsUsed = 0; revealed = false;
+    $tries.textContent = tries;
+    $hints.textContent = hintsUsed;
+    $msg.textContent = "";
+    $hintBox.style.display = "none";
+    $hintBox.textContent = "";
+    $guess.value = "";
+    $guess.focus();
+  }
+
+  function showHint(){
+    const m = MEMBERS[answerIndex];
+    const i = Math.min(hintsUsed, m.hints.length-1);
+    $hintBox.style.display = "block";
+    $hintBox.textContent = m.hints[i];
+    hintsUsed++;
+    $hints.textContent = hintsUsed;
+  }
+
+  function check(){
+    const m = MEMBERS[answerIndex];
+    const val = normalize($guess.value);
+    if(!val){ $msg.textContent = "Type a member’s name first."; return; }
+    tries++; $tries.textContent = tries;
+
+    const allAliases = new Set([normalize(m.name), ...m.aliases.map(normalize)]);
+    if(allAliases.has(val)){
+      $msg.textContent = `✅ Correct! It’s ${m.name}. Attempts: ${tries}${hintsUsed?` | Hints used: ${hintsUsed}`:''}`;
+      if(!revealed){ streak++; $streak.textContent = streak; }
+      // start next round after short delay
+      setTimeout(pickAnswer, 1200);
+    } else {
+      // Soft guidance: check if val matches any known member to help spelling
+      const anyMatch = MEMBERS.some(mem => {
+        const set = new Set([normalize(mem.name), ...mem.aliases.map(normalize)]);
+        return set.has(val);
+      });
+      $msg.textContent = anyMatch ? "Close, but that’s not the current answer. Try a hint!" : "Not recognized—check spelling or try an alias.";
+    }
+  }
+
+  function reveal(){
+    const m = MEMBERS[answerIndex];
+    $msg.textContent = `ℹ️ Revealed: ${m.name}. New round starting…`;
+    revealed = true;
+    streak = 0; $streak.textContent = streak;
+    setTimeout(pickAnswer, 1200);
+  }
+
+  // Events
+  $submit.addEventListener('click', check);
+  $hint.addEventListener('click', showHint);
+  $reveal.addEventListener('click', reveal);
+  $reset.addEventListener('click', pickAnswer);
+  $guess.addEventListener('keydown', (e)=>{ if(e.key==='Enter') check(); });
+
+  // init
+  pickAnswer();
+})();
+</script>
+</body>
+</html>
+        <footer class="bg-white py-4 mt-auto">
+            <div class="container px-5">
+                <div class="row align-items-center justify-content-between flex-column flex-sm-row">
+                    <div class="col-auto"><div class="small m-0">Copyright &copy; Your Website 2023</div></div>
+                    <div class="col-auto">
+                        <a class="small" href="#!">Privacy</a>
+                        <span class="mx-1">&middot;</span>
+                        <a class="small" href="#!">Terms</a>
+                        <span class="mx-1">&middot;</span>
+                        <a class="small" href="#!">Contact</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <!-- Bootstrap core JS-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Core theme JS-->
+        <script src="js/scripts.js"></script>
+    </body>
+</html>
